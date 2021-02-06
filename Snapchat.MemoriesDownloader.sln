@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapchat.MemoriesDownloader.Core", "Snapchat.MemoriesDownloader.Core\Snapchat.MemoriesDownloader.Core.csproj", "{1DD01DAF-401C-460D-8D38-8A8059292198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapchat.MemoriesDownloader.Core.Tests", "Snapchat.MemoriesDownloader.Core.Tests\Snapchat.MemoriesDownloader.Core.Tests.csproj", "{5A8CF737-302A-46DE-BB2C-11309E786E60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DD01DAF-401C-460D-8D38-8A8059292198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DD01DAF-401C-460D-8D38-8A8059292198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DD01DAF-401C-460D-8D38-8A8059292198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DD01DAF-401C-460D-8D38-8A8059292198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5ACF933E-734B-4C0E-9826-52C3B2ED1E8A}
+	EndGlobalSection
+EndGlobal
