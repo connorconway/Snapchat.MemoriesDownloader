@@ -1,6 +1,26 @@
 # Snapchat.MemoriesDownloader
-This program allows you to download all of your Snapchat memories.
+This program allows you to download all of your Snapchat memories.  
+Your data will download organised with the following file structure:  
+```
+- YEAR 
+-- MONTH 
+--- DAY 
+---- {date}.jpg
+---- {date}.mp4
+```
 
+For example:
+
+```
+- 2018 
+-- 06 (June)
+--- 02 (Wednesday)
+---- 2018-06-02.jpg
+---- 2018-06-02.mp4
+--- 03 (Thursday)
+---- 2018-06-03.jpg
+- 2019
+```
 # How to run
 - Download your Snapchat data: https://support.snapchat.com/en-US/a/download-my-data  
 - Extract the zip-file  
