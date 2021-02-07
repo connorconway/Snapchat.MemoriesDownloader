@@ -31,3 +31,11 @@ For example:
 
 # Trouble Shooting
 Make sure you get a fresh zip-file before running the script, links will expire over time
+
+# Running tests
+To run the tests you will need to create a local-appsettings.json file and exchange {id} for your snapchat file ID.
+```
+{
+    "TestMemoryId" : "{id}"
+}
+```
