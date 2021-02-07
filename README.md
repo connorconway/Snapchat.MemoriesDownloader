@@ -33,7 +33,7 @@ For example:
 - To override the 'Output' directory name set the -o flag pointing to the directory you want to store the output  
 - Run the Snapshat.MemoriesDownloader.exe   
 - Example:  
-```Snapshat.MemoriesDownloader.exe -h ./memories_history.json -o Output```
+```Snapchat.MemoriesDownloader.exe -h ./memories_history.json -o Output```
 
 # Trouble Shooting
 Make sure you get a fresh zip-file before running the script, links will expire over time
