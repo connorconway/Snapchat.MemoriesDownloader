@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Net.Http;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Snapchat.MemoriesDownloader.Core
 {
     public class Memory : IEquatable<Memory>
     {
-        private readonly HttpClient _client = new HttpClient();
+        private readonly SnapchatApiClient _client = new SnapchatApiClient();
         private readonly string _date;
         private readonly string _mediaType;
         private readonly string _id;
@@ -23,7 +22,7 @@ namespace Snapchat.MemoriesDownloader.Core
             _dateAsDate = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss UTC", CultureInfo.InvariantCulture);
         }
 
-        public async Task<string> SaveAsync(Uri route)
+        public async Task<string> SaveAsync()
         {
             var fullMonthName = _dateAsDate.ToString("MMMM");
             var fullDayName = _dateAsDate.ToString("dddd");
@@ -32,6 +31,8 @@ namespace Snapchat.MemoriesDownloader.Core
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);
 
+            var hashesOfFilesInDirectory = Directory.GetFiles(directoryPath).Select(Sha256.CalculateFrom);
+
             switch (_mediaType)
             {
                 case "VIDEO":
@@ -46,64 +47,46 @@ namespace Snapchat.MemoriesDownloader.Core
                     break;
             }
 
-            var downloadedFileInBytes = await DownloadAsync(route);
+            var downloadLink = await _client.GetDownloadLinkAsync(_id);
+            var byteStream = await _client.GetFileByteArrayAsync(downloadLink);
+
+            if (hashesOfFilesInDirectory.Contains(Sha256.CalculateFrom(byteStream)))
+            {
+                Console.WriteLine("Image already downloaded. Skipping.");
+                return string.Empty;
+            }
+
             switch (_mediaType)
             {
                 case "VIDEO":
                     var path = Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.mp4");
-                    await File.WriteAllBytesAsync(path, downloadedFileInBytes);
+                    Console.WriteLine($"downloading {path}");
+                    await File.WriteAllBytesAsync(path, byteStream);
                     return path;
                 case "PHOTO":
                     path = Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.jpg");
-                    await File.WriteAllBytesAsync(path, downloadedFileInBytes);
+                    Console.WriteLine($"downloading {path}");
+                    await File.WriteAllBytesAsync(path, byteStream);
                     return path;
             }
 
             throw new Exception("Invalid media type");
         }
 
-        private async Task<string> DownloadLinkAsync(Uri route)
-        {
-            var postRequest = HttpRequestBuilder.PostRequest(route)
-                                                .WithContent(_id)
-                                                .WithEncoding(Encoding.UTF8)
-                                                .WithMediaType("application/x-www-form-urlencoded")
-                                                .Build();
-
-            var result = await _client.SendAsync(postRequest);
-            var downloadLink = await result.Content.ReadAsStringAsync();
-            return downloadLink;
-        }
-
-        private async Task<byte[]> DownloadAsync(Uri route)
-        {
-            var downloadLink = await DownloadLinkAsync(route);
-
-            var getRequest = HttpRequestBuilder.GetRequest(new Uri(downloadLink))
-                                               .Build();
-
-            var result = await _client.SendAsync(getRequest);
-            if (result.IsSuccessStatusCode)
-                return await result.Content.ReadAsByteArrayAsync();
-            
-            throw new Exception("API call failed");
-        }
-
         public bool Equals(Memory other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
-            return _date == other._date && _mediaType == other._mediaType && _id == other._id;
+            return _id == other._id;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Memory) obj);
+            return obj.GetType() == GetType() && Equals((Memory) obj);
         }
 
-        public override int GetHashCode() => HashCode.Combine(_date, _mediaType, _id);
+        public override int GetHashCode() => HashCode.Combine(_id);
     }
 }
