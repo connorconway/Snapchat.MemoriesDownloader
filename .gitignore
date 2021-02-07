@@ -294,3 +294,4 @@ __pycache__/
 *.ncrunchproject
 .hg/
 .hgignore
+*.local-appsettings.json
