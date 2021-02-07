@@ -13,7 +13,7 @@ namespace Snapchat.MemoriesDownloader.Core.Tests
         {
             var memory = new Memory(TestSettingsFile.TestMemoryId, "2021-02-03 20:47:45 UTC", "VIDEO");
             var savedPath = await memory.SaveAsync(new Uri("https://app.snapchat.com/dmd/memories"));
-            savedPath.Should().BeEquivalentTo("2021-02-03 20-47-45 UTC.mp4");
+            savedPath.Should().BeEquivalentTo(@"2021\02 (February)\03 (Wednesday)\2021-02-03 20-47-45 UTC.mp4");
         }
     }
 }
