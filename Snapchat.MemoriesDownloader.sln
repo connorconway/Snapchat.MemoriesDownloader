@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapchat.MemoriesDownloader
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapchat.MemoriesDownloader.Core.Tests", "Snapchat.MemoriesDownloader.Core.Tests\Snapchat.MemoriesDownloader.Core.Tests.csproj", "{5A8CF737-302A-46DE-BB2C-11309E786E60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapchat.MemoriesDownloader", "Snapchat.MemoriesDownloader\Snapchat.MemoriesDownloader.csproj", "{120E6C36-BF35-44D4-9F6C-5D08981AD478}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapchat.MemoriesDownloader.Tests", "Snapchat.MemoriesDownloader.Tests\Snapchat.MemoriesDownloader.Tests.csproj", "{5DCF1FFA-72ED-4EC3-8974-658156F7CA85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A8CF737-302A-46DE-BB2C-11309E786E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{120E6C36-BF35-44D4-9F6C-5D08981AD478}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{120E6C36-BF35-44D4-9F6C-5D08981AD478}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{120E6C36-BF35-44D4-9F6C-5D08981AD478}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{120E6C36-BF35-44D4-9F6C-5D08981AD478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DCF1FFA-72ED-4EC3-8974-658156F7CA85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DCF1FFA-72ED-4EC3-8974-658156F7CA85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DCF1FFA-72ED-4EC3-8974-658156F7CA85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DCF1FFA-72ED-4EC3-8974-658156F7CA85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

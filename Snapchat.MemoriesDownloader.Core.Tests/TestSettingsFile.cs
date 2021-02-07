@@ -11,6 +11,6 @@ namespace Snapchat.MemoriesDownloader.Core.Tests
                                                                    .AddJsonFile(FileName)
                                                                    .Build();
 
-        public static string TestMemoryId => Configuration["TestMemoryHistoryId"];
+        public static string TestMemoryId => Configuration["TestMemoryId"];
     }
 }
