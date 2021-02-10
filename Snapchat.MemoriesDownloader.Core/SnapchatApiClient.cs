@@ -12,13 +12,13 @@ namespace Snapchat.MemoriesDownloader.Core
 
         public async Task<string> GetDownloadLinkAsync(string id)
         {
-            var postRequest = HttpRequestBuilder.PostRequest(_baseRoute)
+            using var postRequest = HttpRequestBuilder.PostRequest(_baseRoute)
                                                 .WithContent(id)
                                                 .WithEncoding(Encoding.UTF8)
                                                 .WithMediaType("application/x-www-form-urlencoded")
                                                 .Build();
 
-            var result = await _client.SendAsync(postRequest);
+            using var result = await _client.SendAsync(postRequest);
             if (!result.IsSuccessStatusCode)
                 throw new Exception("Unable to obtain download link");
 
@@ -27,10 +27,10 @@ namespace Snapchat.MemoriesDownloader.Core
 
         public async Task<byte[]> GetFileByteArrayAsync(string downloadLink)
         {
-            var getRequest = HttpRequestBuilder.GetRequest(new Uri(downloadLink))
+            using var getRequest = HttpRequestBuilder.GetRequest(new Uri(downloadLink))
                                                 .Build();
 
-            var result = await _client.SendAsync(getRequest);
+            using var result = await _client.SendAsync(getRequest);
             if (!result.IsSuccessStatusCode)
                 throw new Exception("Unable to download file");
 

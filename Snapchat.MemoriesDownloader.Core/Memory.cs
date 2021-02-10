@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Snapchat.MemoriesDownloader.Core
 {
-    public class Memory : IEquatable<Memory>
+    public class Memory : IEquatable<Memory>, IDisposable
     {
         private readonly SnapchatApiClient _client = new SnapchatApiClient();
         private readonly string _date;
         private readonly string _mediaType;
         private readonly string _id;
         private readonly DateTime _dateAsDate;
+        private byte[] _byteStream;
+        private string _downloadLink;
+        private string _filePath;
 
         public Memory(string id, string date, string mediaType)
         {
@@ -22,7 +24,16 @@ namespace Snapchat.MemoriesDownloader.Core
             _dateAsDate = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss UTC", CultureInfo.InvariantCulture);
         }
 
-        public async Task<string> SaveAsync()
+        public async Task<string> HashAsync()
+        {
+            if (_mediaType.Equals("VIDEO"))
+                return Guid.NewGuid().ToString();
+            _downloadLink = _downloadLink ??= await _client.GetDownloadLinkAsync(_id);
+            _byteStream = _byteStream ??= await _client.GetFileByteArrayAsync(_downloadLink);
+            return Md5.CalculateFrom(_byteStream);
+        }
+
+        public bool Exists()
         {
             var fullMonthName = _dateAsDate.ToString("MMMM");
             var fullDayName = _dateAsDate.ToString("dddd");
@@ -31,46 +42,34 @@ namespace Snapchat.MemoriesDownloader.Core
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);
 
-            var hashesOfFilesInDirectory = Directory.GetFiles(directoryPath).Select(Sha256.CalculateFrom);
-
-            switch (_mediaType)
+            _filePath = _filePath ??= _mediaType switch
             {
-                case "VIDEO":
-                    var path = Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.mp4");
-                    if (File.Exists(path))
-                        return path;
-                    break;
-                case "PHOTO":
-                    path = Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.jpg");
-                    if (File.Exists(path))
-                        return path;
-                    break;
+                "VIDEO" => Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.mp4"),
+                "PHOTO" => Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.jpg"),
+                _ => string.Empty
+            };
+
+            if (string.IsNullOrEmpty(_filePath))
+                Console.WriteLine($"Error - Invalid Media Type ({_mediaType}) for memory with Id: {_id}.");
+
+            if (File.Exists(_filePath))
+            {
+                Console.WriteLine($"Skipping - File already exists '{_filePath}'.");
+                return true; 
             }
 
-            var downloadLink = await _client.GetDownloadLinkAsync(_id);
-            var byteStream = await _client.GetFileByteArrayAsync(downloadLink);
+            return false;
+        }
 
-            if (hashesOfFilesInDirectory.Contains(Sha256.CalculateFrom(byteStream)))
-            {
-                Console.WriteLine("Image already downloaded. Skipping.");
-                return string.Empty;
-            }
+        public async Task<string> SaveAsync()
+        {
+            _downloadLink = _downloadLink ??= await _client.GetDownloadLinkAsync(_id);
+            _byteStream = _byteStream ??= await _client.GetFileByteArrayAsync(_downloadLink);
+            
+            await File.WriteAllBytesAsync(_filePath, _byteStream);
+            Console.WriteLine($"Success - Memory saved: {_filePath}");
 
-            switch (_mediaType)
-            {
-                case "VIDEO":
-                    var path = Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.mp4");
-                    Console.WriteLine($"downloading {path}");
-                    await File.WriteAllBytesAsync(path, byteStream);
-                    return path;
-                case "PHOTO":
-                    path = Path.Combine(directoryPath, $"{_date.Replace(':', '-')}.jpg");
-                    Console.WriteLine($"downloading {path}");
-                    await File.WriteAllBytesAsync(path, byteStream);
-                    return path;
-            }
-
-            throw new Exception("Invalid media type");
+            return _filePath;
         }
 
         public bool Equals(Memory other)
@@ -88,5 +87,7 @@ namespace Snapchat.MemoriesDownloader.Core
         }
 
         public override int GetHashCode() => HashCode.Combine(_id);
+
+        public void Dispose() => _byteStream = null;
     }
 }
